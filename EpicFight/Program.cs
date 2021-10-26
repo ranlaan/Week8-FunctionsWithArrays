@@ -12,10 +12,52 @@ namespace EpicFight
             heroweapon = RandomWeapon();
             villainweapon = RandomWeapon();
             villain = RandomVillain();
-            Console.WriteLine($"{hero} will fight with {villain}");
-            Console.WriteLine($"{hero} will fight with {heroweapon}");
-            Console.WriteLine($"{villain} wil fight with {villainweapon}");
+            int heroHP = GenerateHP(hero);
+            int villainHP = GenerateHP(villain);
 
+            Console.WriteLine($"{hero} ({heroHP}hp) will fight with {villain} ({villainHP}hp)");
+            Console.WriteLine($"{hero} will fight with {heroweapon}");
+            Console.WriteLine($"{villain} will fight with {villainweapon}");
+
+            while (heroHP > 0 && villainHP > 0)
+            {
+                heroHP = heroHP - Hit(villain, hero, villainweapon);
+                villainHP = villainHP - Hit(hero, villain, heroweapon);
+            }
+
+            if(heroHP <= 0)
+            {
+                Console.WriteLine("Villain wins!");
+            }
+            else
+            {
+                Console.WriteLine($"{hero} has won!");
+            }
+
+        }
+
+        private static int Hit(string characterOne, string characterTwo, string weapon)
+        {
+            Random rnd = new Random();
+            int strike = rnd.Next(0, weapon.Length / 2);
+            Console.WriteLine($"{characterOne} dealt {strike} damage!.");
+
+            if (strike == weapon.Length /2 - 1)
+            {
+                Console.WriteLine($"Awesome! {characterOne} made a CRITICAL hit!");
+            }
+            else if (strike == 0)
+            {
+                Console.WriteLine($"{characterTwo} dodged the attack!");
+            }
+
+            return strike;
+        }
+
+        private static int GenerateHP(string someCharacter)
+        {
+            Random rnd = new Random();
+            return rnd.Next(someCharacter.Length, someCharacter.Length + 10);
         }
 
         private static int RandomIndex(string[] someArray)
@@ -45,7 +87,7 @@ namespace EpicFight
 
         private static string RandomWeapon()
         {
-            string[] weapons = { "Spoon", "Frying pan", "Glock", "Tree", "Guitar" };
+            string[] weapons = { "Spoon", "Frying pan", "Flip-flop", "Tree", "Guitar" };
 
             return weapons[RandomIndex(weapons)];
         }
